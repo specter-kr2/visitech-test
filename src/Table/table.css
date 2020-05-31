@@ -1,0 +1,39 @@
+.table--header-row {
+    background-color: #999999;
+}
+
+.table--groupname-row{
+    background-color: #B7B7B7;
+}
+
+.table--dayname-row{
+    background-color: #CCCCCC;
+}
+
+.table--dayhead-row{
+    background-color: #D9D9D9;
+}
+
+.table--unitname-row{
+    background-color: #F3F3F3;
+}
+
+.table--zone-row {
+    font-size: 12px;
+}
+
+.table--cell-align-left {
+    text-align: left;
+}
+.table--cell-align-right {
+    text-align: right;
+}
+
+.hidden-block {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+}
+.cursor-pointer {
+    cursor: pointer;
+}
