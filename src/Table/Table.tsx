@@ -1,17 +1,17 @@
 import React, { FC, memo, useState, useEffect } from "react";
-import { GroupsData } from "../utils/GroupsData";
+import { RestructuredData } from "../utils/RestructuredData";
 import { RestructuredGroup, TotalTime } from "../types/data";
 import { TableHeader } from "../components/TableHeader";
 import { Group } from "../components/Group";
 import { Unit } from "../components/Unit";
 import { Day } from "../components/Day";
 import { makeHumanTime } from "../utils/makeHumanTime";
+import { BATCH_SIZE } from "../utils/constants";
 import "./table.css";
 
 import DATA from "../data/data.json";
 
-const groupsData = new GroupsData();
-const LIMIT = 2;
+const data = new RestructuredData();
 
 export const Table: FC = memo(() => {
   const [groupsState, setGroupsState] = useState<RestructuredGroup[]>([]);
@@ -24,23 +24,22 @@ export const Table: FC = memo(() => {
   const [hiddenDays, setHiddenDays] = useState<string[]>([]);
 
   const [offset, setOffset] = useState(0);
+
   useEffect(() => {
     function addData() {
-      if (offset + LIMIT >= DATA.length) {
-        groupsData.restructureData(
-          DATA.slice(offset, offset + (DATA.length - offset))
-        );
-        setGroupsState(groupsData._result);
-        setTotalTime(groupsData._totalTime);
-        return setOffset(offset + (DATA.length - offset));
+      if (offset + BATCH_SIZE >= DATA.length) {
+        data.restructureData(DATA.slice(offset, DATA.length));
+        setGroupsState(data.result);
+        setTotalTime(data.totalTime);
+        return setOffset(DATA.length);
       }
-      groupsData.restructureData(DATA.slice(offset, offset + LIMIT));
-      setGroupsState(groupsData._result);
-      setTotalTime(groupsData._totalTime);
-      return setOffset(offset + LIMIT);
+      data.restructureData(DATA.slice(offset, offset + BATCH_SIZE));
+      setGroupsState(data.result);
+      setTotalTime(data.totalTime);
+      return setOffset(offset + BATCH_SIZE);
     }
-    const timer = setInterval(addData, 500);
-    return () => clearInterval(timer);
+    const timer = setTimeout(addData, 0);
+    return () => clearTimeout(timer);
   }, [offset]);
 
   const handleToggleGroup = (id: number) => {
